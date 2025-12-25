@@ -54,7 +54,7 @@ class DisplayManager:
         else:
             raise ValueError(f"Unsupported display type: {display_type}")
 
-    def display_image(self, image, image_settings=[]):
+    def display_image(self, image, screen, image_settings=[]):
         
         """
         Delegates image rendering to the appropriate display instance.
@@ -81,4 +81,7 @@ class DisplayManager:
         image = apply_image_enhancement(image, self.device_config.get_config("image_settings"))
 
         # Pass to the concrete instance to render to the device.
-        self.display.display_image(image, image_settings)
+        if screen == 1:
+            self.display.display_image(image, image_settings)
+        elif screen == 2:
+            self.display.display_image2(image, image_settings)

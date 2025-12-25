@@ -54,7 +54,9 @@ class WaveshareDisplay(AbstractDisplay):
         try:
             # Dynamically load module
             epd_module = importlib.import_module(module_name)  
+            epd_module2 = importlib.import_module("display.waveshare_epd.display2")  
             self.epd_display = epd_module.EPD()
+            self.epd_display2 = epd_module2.EPD()
             # Workaround for init functions with inconsistent casing
             self.epd_display_init = getattr(self.epd_display, "Init", getattr(self.epd_display, "init", None))
 
@@ -121,3 +123,43 @@ class WaveshareDisplay(AbstractDisplay):
         # Put device into low power mode (EPD displays maintain image when powered off)
         logger.info("Putting Waveshare display into sleep mode for power saving.")
         self.epd_display.sleep()
+
+    def display_image2(self, image, image_settings=[]):
+        
+        """
+        Displays an image on the Waveshare display.
+
+        The image has been processed by adjusting orientation, resizing, and converting it
+        into the buffer format required for e-paper rendering.
+
+        Args:
+            image (PIL.Image): The image to be displayed.
+            image_settings (list, optional): Additional settings to modify image rendering.
+
+        Raises:
+            ValueError: If no image is provided.
+        """
+
+        logger.info("Displaying image to Waveshare display.")
+        if not image:
+            raise ValueError(f"No image provided.")
+
+        # Assume device was in sleep mode.
+        self.epd_display_init()
+
+        # Clear residual pixels before updating the image.
+        self.epd_display2.Clear()
+
+        # Display the image on the WS display.
+        if not self.bi_color_display:
+            self.epd_display2.display(self.epd_display.getbuffer(image))
+        else:
+            color_image = Image.new('1', image.size, 255)
+            self.epd_display2.display(
+                self.epd_display2.getbuffer(image),
+                self.epd_display2.getbuffer(color_image)
+            )
+
+        # Put device into low power mode (EPD displays maintain image when powered off)
+        logger.info("Putting Waveshare display into sleep mode for power saving.")
+        self.epd_display2.sleep()

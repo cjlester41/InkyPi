@@ -226,7 +226,10 @@ def update_now():
 
             plugin = get_plugin_instance(plugin_config)
             image = plugin.generate_image(plugin_settings, device_config)
-            display_manager.display_image(image, image_settings=plugin_config.get("image_settings", []))
+            if plugin_id != "Calandar":
+                display_manager.display_image(image, screen=1, image_settings=plugin_config.get("image_settings", []))
+            else:
+                display_manager.display_image(image, screen=2, image_settings=plugin_config.get("image_settings", []))
 
     except Exception as e:
         logger.exception(f"Error in update_now: {str(e)}")
