@@ -1,0 +1,30 @@
+{
+    "name": "InkyPi",
+    "orientation": "horizontal",
+    "inverted_image": false,
+    "scheduler_sleep_time": 60,
+    "startup": false,
+    "display_type": "epd7in3e",
+    "resolution": [
+        800,
+        480
+    ],
+    "playlist_config": {
+        "playlists": [
+            {
+                "name": "Default",
+                "start_time": "00:00",
+                "end_time": "24:00",
+                "plugins": [],
+                "current_plugin_index": null
+            }
+        ],
+        "active_playlist": null
+    },
+    "refresh_info": {
+        "refresh_time": "2025-12-24T02:23:42.958417+00:00",
+        "image_hash": "224cc6c883b7683d25f8d104fcc9b3a8c2fc5946455dbf09453f3cea54b4c27e",
+        "refresh_type": "Manual Update",
+        "plugin_id": "calendar"
+    }
+}
