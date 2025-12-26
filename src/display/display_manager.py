@@ -4,6 +4,7 @@ import logging
 
 from utils.image_utils import resize_image, change_orientation, apply_image_enhancement
 from display.mock_display import MockDisplay
+from display.mock_display2 import MockDisplay2
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +16,7 @@ except ImportError:
 
 try:
     from display.waveshare_display import WaveshareDisplay
+    # from display.waveshare_epd.display2 import 
 except ImportError:
     logger.info("Waveshare display not available, hardware support disabled")
 
@@ -41,6 +43,7 @@ class DisplayManager:
 
         if display_type == "mock":
             self.display = MockDisplay(device_config)
+            self.display2 = MockDisplay2(device_config)
         elif display_type == "inky":
             self.display = InkyDisplay(device_config)
         elif fnmatch.fnmatch(display_type, "epd*in*"):  
@@ -51,6 +54,7 @@ class DisplayManager:
             #
             # see https://github.com/waveshareteam/e-Paper
             self.display = WaveshareDisplay(device_config)
+            # self.display2 = WaveshareDisplay(device_config)
         else:
             raise ValueError(f"Unsupported display type: {display_type}")
 
@@ -71,9 +75,14 @@ class DisplayManager:
             raise ValueError("No valid display instance initialized.")
         
         # Save the image
-        logger.info(f"Saving image to {self.device_config.current_image_file}")
-        image.save(self.device_config.current_image_file)
-
+        if screen == 1:
+            logger.info(f"Saving image to {self.device_config.current_image_file}")
+            image.save(self.device_config.current_image_file)
+            
+        elif screen == 2:
+            logger.info(f"Saving image to {self.device_config.current_image_file2}")
+            image.save(self.device_config.current_image_file2)
+        
         # Resize and adjust orientation
         image = change_orientation(image, self.device_config.get_config("orientation"))
         image = resize_image(image, self.device_config.get_resolution(), image_settings)
@@ -84,4 +93,4 @@ class DisplayManager:
         if screen == 1:
             self.display.display_image(image, image_settings)
         elif screen == 2:
-            self.display.display_image2(image, image_settings)
+            self.display2.display_image(image, image_settings)
