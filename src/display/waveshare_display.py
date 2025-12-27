@@ -82,12 +82,19 @@ class WaveshareDisplay(AbstractDisplay):
                 write=True)
             
     def select_display(self, rst, dc, cs, busy):
-            
+                
         from display.waveshare_epd import epdconfig
         from display.waveshare_epd.epdconfig import RaspberryPi
         
-        epdconfig.implementation = RaspberryPi()
-        
+        if epdconfig.implementation is not None:
+            try:
+                # FIX: Call module_exit(cleanup=True) on the instance, NOT the class.
+                # This correctly passes 'self' automatically and releases GPIO 17.
+                epdconfig.implementation.module_exit(cleanup=True) 
+                logger.info("EAUJJJJJ")
+            except Exception as e:
+                logger.error(f"Cleanup during switch failed: {e}")  
+                
         epdconfig.RST_PIN  = rst
         epdconfig.DC_PIN   = dc
         epdconfig.CS_PIN   = cs
@@ -95,7 +102,8 @@ class WaveshareDisplay(AbstractDisplay):
         
         # Re-initialize the implementation instance to create new GPIO objects
         # stored in the implementation variable at the bottom of epdconfig.py
-        epdconfig.implementation.__init__()           
+        epdconfig.implementation = RaspberryPi()
+        epdconfig.implementation.__init__()                    
 
     def display_image(self, image, screen, image_settings=[]):
         

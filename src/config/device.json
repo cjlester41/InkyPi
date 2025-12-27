@@ -22,9 +22,9 @@
         "active_playlist": null
     },
     "refresh_info": {
-        "refresh_time": "2025-12-24T02:23:42.958417+00:00",
-        "image_hash": "224cc6c883b7683d25f8d104fcc9b3a8c2fc5946455dbf09453f3cea54b4c27e",
+        "refresh_time": "2025-12-27T06:55:50.965540+00:00",
+        "image_hash": "210ea641187f4c8fa78f48e6f8349a31ff0f7861c8381a46bb07ea52d7757397",
         "refresh_type": "Manual Update",
-        "plugin_id": "calendar"
+        "plugin_id": "comic"
     }
 }

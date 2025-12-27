@@ -152,7 +152,7 @@ class RaspberryPi:
         self.GPIO_RST_PIN.off()
         self.GPIO_DC_PIN.off()
         self.GPIO_PWR_PIN.off()
-        logger.debug("close 5V, Module enters 0 power consumption ...")
+        logger.info("close 5V, Module enters 0 power consumption ...")
         
         if cleanup:
             self.GPIO_RST_PIN.close()
@@ -160,6 +160,7 @@ class RaspberryPi:
             # self.GPIO_CS_PIN.close()
             self.GPIO_PWR_PIN.close()
             self.GPIO_BUSY_PIN.close()
+            logger.info("ASDFFFFFFFASDFASDFDSFASDF")
 
         
 
