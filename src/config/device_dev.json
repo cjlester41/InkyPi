@@ -1,6 +1,27 @@
 {
-    "name": "InkyPi Development",
+    "name": "Development",
     "display_type": "mock",
-    "resolution": [800, 480],
-    "orientation": "horizontal"
+    "resolution": [
+        800,
+        480
+    ],
+    "orientation": "horizontal",
+    "playlist_config": {
+        "playlists": [
+            {
+                "name": "Default",
+                "start_time": "00:00",
+                "end_time": "24:00",
+                "plugins": [],
+                "current_plugin_index": null
+            }
+        ],
+        "active_playlist": null
+    },
+    "refresh_info": {
+        "refresh_time": "2025-12-27T05:18:17.424304+00:00",
+        "image_hash": "7306b153a435c2579dc4c4215ded3976d6984b8d2580303368c59ae96ad4988d",
+        "refresh_type": "Manual Update",
+        "plugin_id": "comic"
+    }
 }

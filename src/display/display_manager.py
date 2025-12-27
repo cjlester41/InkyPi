@@ -54,7 +54,7 @@ class DisplayManager:
         else:
             raise ValueError(f"Unsupported display type: {display_type}")
 
-    def display_image(self, image, image_settings=[]):
+    def display_image(self, image, screen, image_settings=[]):
         
         """
         Delegates image rendering to the appropriate display instance.
@@ -70,15 +70,26 @@ class DisplayManager:
         if not hasattr(self, "display"):
             raise ValueError("No valid display instance initialized.")
         
-        # Save the image
-        logger.info(f"Saving image to {self.device_config.current_image_file}")
-        image.save(self.device_config.current_image_file)
+        if screen == 1:
+            # Save the image
+            logger.info(f"Saving image to {self.device_config.current_image_file}")
+            image.save(self.device_config.current_image_file)
+    
+            # Resize and adjust orientation
+            image = change_orientation(image, self.device_config.get_config("orientation"))
+            image = resize_image(image, self.device_config.get_resolution(), image_settings)
+            if self.device_config.get_config("inverted_image"): image = image.rotate(180)
 
-        # Resize and adjust orientation
-        image = change_orientation(image, self.device_config.get_config("orientation"))
-        image = resize_image(image, self.device_config.get_resolution(), image_settings)
-        if self.device_config.get_config("inverted_image"): image = image.rotate(180)
-        image = apply_image_enhancement(image, self.device_config.get_config("image_settings"))
-
+        else:
+                
+            logger.info(f"Saving image to {self.device_config.current_image_file2}")
+            image.save(self.device_config.current_image_file2)
+        
+            image = change_orientation(image, self.device_config.get_config("orientation"))
+            image = resize_image(image, self.device_config.get_resolution(), image_settings)
+            image = image.rotate(180)
+            
+        # image = apply_image_enhancement(image, self.device_config.get_config("image_settings"))
         # Pass to the concrete instance to render to the device.
-        self.display.display_image(image, image_settings)
+        image = apply_image_enhancement(image, self.device_config.get_config("image_settings"))
+        self.display.display_image(image, screen, image_settings)

@@ -80,9 +80,24 @@ class WaveshareDisplay(AbstractDisplay):
                 "resolution",
                 resolution,
                 write=True)
+            
+    def select_display(self, rst, dc, cs, busy):
+            
+        from display.waveshare_epd import epdconfig
+        from display.waveshare_epd.epdconfig import RaspberryPi
+        
+        epdconfig.implementation = RaspberryPi()
+        
+        epdconfig.RST_PIN  = rst
+        epdconfig.DC_PIN   = dc
+        epdconfig.CS_PIN   = cs
+        epdconfig.BUSY_PIN = busy
+        
+        # Re-initialize the implementation instance to create new GPIO objects
+        # stored in the implementation variable at the bottom of epdconfig.py
+        epdconfig.implementation.__init__()           
 
-
-    def display_image(self, image, image_settings=[]):
+    def display_image(self, image, screen, image_settings=[]):
         
         """
         Displays an image on the Waveshare display.
@@ -97,7 +112,11 @@ class WaveshareDisplay(AbstractDisplay):
         Raises:
             ValueError: If no image is provided.
         """
-
+        if screen == 1:
+            self.select_display(rst=17, dc=25, cs=8, busy=24)
+        else:
+            self.select_display(rst=27, dc=22, cs=7, busy=23)
+        
         logger.info("Displaying image to Waveshare display.")
         if not image:
             raise ValueError(f"No image provided.")
