@@ -160,7 +160,6 @@ class RaspberryPi:
             # self.GPIO_CS_PIN.close()
             self.GPIO_PWR_PIN.close()
             self.GPIO_BUSY_PIN.close()
-            logger.info("ASDFFFFFFFASDFASDFDSFASDF")
 
         
 

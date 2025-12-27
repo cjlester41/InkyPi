@@ -38,72 +38,49 @@ class WaveshareDisplay(AbstractDisplay):
 
         # get the device type which should be the model number of the device.
         display_type = self.device_config.get_config("display_type")  
-        logger.info(f"Loading EPD display for {display_type} display")
-
+        
         if not display_type:
             raise ValueError("Waveshare driver but 'display_type' not specified in configuration.")
 
-        # Construct module path dynamically - e.g. "display.waveshare_epd.epd7in3e"
-        module_name = f"display.waveshare_epd.{display_type}" 
-
-        # Workaround for some Waveshare drivers using 'import epdconfig' causing import errors
+        # Ensure the waveshare_epd directory is in path for relative imports
         epd_dir = Path(__file__).parent / "waveshare_epd"
         if str(epd_dir) not in sys.path:
             sys.path.insert(0, str(epd_dir))
 
-        try:
-            # Dynamically load module
-            epd_module = importlib.import_module(module_name)  
-            self.epd_display = epd_module.EPD()
-            # Workaround for init functions with inconsistent casing
-            self.epd_display_init = getattr(self.epd_display, "Init", getattr(self.epd_display, "init", None))
-
-            if not callable(self.epd_display_init):
-                raise AttributeError("No Init/init method found")
-
-            self.epd_display_init()
-
-            display_args_spec = inspect.getfullargspec(self.epd_display.display)
-            display_args = display_args_spec.args
-        except ModuleNotFoundError:
-            raise ValueError(f"Unsupported Waveshare display type: {display_type}")
-        except AttributeError:
-            raise ValueError(f"Display does not support required methods: {display_type}")
-
-        self.bi_color_display = len(display_args_spec.args) > 2
-
-        # update the resolution directly from the loaded device context
-        if not self.device_config.get_config("resolution"):
-            w, h = int(self.epd_display.width), int(self.epd_display.height)
-            resolution = [w, h] if w >= h else [h, w]
-            self.device_config.update_value(
-                "resolution",
-                resolution,
-                write=True)
-            
+        # Dynamically load the specific EPD model (e.g., epd7in3e)
+        module_name = f"display.waveshare_epd.{display_type}" 
+        self.epd_module = importlib.import_module(module_name)
+        
+        # We don't initialize self.epd_display here yet, 
+        # because we need to set pins per-screen in display_image           
     def select_display(self, rst, dc, cs, busy):
                 
         from display.waveshare_epd import epdconfig
-        from display.waveshare_epd.epdconfig import RaspberryPi
         
-        if epdconfig.implementation is not None:
+        # 1. Cleanup existing GPIO pins to avoid "Pin in use" errors
+        if hasattr(epdconfig, 'implementation') and epdconfig.implementation is not None:
             try:
-                # FIX: Call module_exit(cleanup=True) on the instance, NOT the class.
-                # This correctly passes 'self' automatically and releases GPIO 17.
-                epdconfig.implementation.module_exit(cleanup=True) 
-                logger.info("EAUJJJJJ")
+                # This calls module_exit(cleanup=True) which closes gpiozero objects
+                epdconfig.implementation.module_exit(cleanup=True)
             except Exception as e:
-                logger.error(f"Cleanup during switch failed: {e}")  
-                
-        epdconfig.RST_PIN  = rst
-        epdconfig.DC_PIN   = dc
-        epdconfig.CS_PIN   = cs
-        epdconfig.BUSY_PIN = busy
+                logger.debug(f"Cleanup info: {e}")
+
+        # 2. Update the CLASS variables in RaspberryPi before creating the instance
+        # This is necessary because epdconfig.RaspberryPi uses these to init gpiozero
+        epdconfig.RaspberryPi.RST_PIN = rst
+        epdconfig.RaspberryPi.DC_PIN = dc
+        epdconfig.RaspberryPi.CS_PIN = cs
+        epdconfig.RaspberryPi.BUSY_PIN = busy
         
-        # Re-initialize the implementation instance to create new GPIO objects
-        # stored in the implementation variable at the bottom of epdconfig.py
-        epdconfig.implementation = RaspberryPi()
-        epdconfig.implementation.__init__()                    
+        # 3. Re-instantiate the hardware implementation with the new pin mapping
+        epdconfig.implementation = epdconfig.RaspberryPi()
+        
+        # 4. Re-bind the module-level functions so epd7in3e.py uses the new implementation
+        for func in [x for x in dir(epdconfig.implementation) if not x.startswith('_')]:
+            setattr(epdconfig, func, getattr(epdconfig.implementation, func))
+
+        # 5. Refresh the EPD object so it picks up the new pin values from epdconfig
+        self.epd_display = self.epd_module.EPD()                  
 
     def display_image(self, image, screen, image_settings=[]):
         
@@ -121,30 +98,20 @@ class WaveshareDisplay(AbstractDisplay):
             ValueError: If no image is provided.
         """
         if screen == 1:
+            # Standard Pins
             self.select_display(rst=17, dc=25, cs=8, busy=24)
         else:
+            # Alternate Pins (Make sure these match your physical wiring!)
             self.select_display(rst=27, dc=22, cs=7, busy=23)
         
-        logger.info("Displaying image to Waveshare display.")
-        if not image:
-            raise ValueError(f"No image provided.")
-
-        # Assume device was in sleep mode.
-        self.epd_display_init()
-
-        # Clear residual pixels before updating the image.
+        logger.info(f"Displaying image to Waveshare screen {screen}")
+        
+        # Initialize the hardware for this specific pin set
+        self.epd_display.init()
+        
+        # Standard display logic
         self.epd_display.Clear()
-
-        # Display the image on the WS display.
-        if not self.bi_color_display:
-            self.epd_display.display(self.epd_display.getbuffer(image))
-        else:
-            color_image = Image.new('1', image.size, 255)
-            self.epd_display.display(
-                self.epd_display.getbuffer(image),
-                self.epd_display.getbuffer(color_image)
-            )
-
-        # Put device into low power mode (EPD displays maintain image when powered off)
-        logger.info("Putting Waveshare display into sleep mode for power saving.")
+        self.epd_display.display(self.epd_display.getbuffer(image))
+        
+        # Sleep to protect the panel and release the pins via module_exit in next call
         self.epd_display.sleep()
