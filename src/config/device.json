@@ -15,16 +15,43 @@
                 "name": "Default",
                 "start_time": "00:00",
                 "end_time": "24:00",
-                "plugins": [],
+                "plugins": [
+                    {
+                        "plugin_id": "comic",
+                        "name": "test",
+                        "plugin_settings": {
+                            "comic": "XKCD",
+                            "titleCaption": "true",
+                            "fontSize": "14"
+                        },
+                        "refresh": {
+                            "interval": 60
+                        },
+                        "latest_refresh_time": "2025-12-28T06:06:54.988576+00:00"
+                    },
+                    {
+                        "plugin_id": "clock",
+                        "name": "clock",
+                        "plugin_settings": {
+                            "selectedClockFace": "Digital Clock",
+                            "primaryColor": "#ffffff",
+                            "secondaryColor": "#000000"
+                        },
+                        "refresh": {
+                            "interval": 60
+                        },
+                        "latest_refresh_time": "2025-12-28T06:06:10.906640+00:00"
+                    }
+                ],
                 "current_plugin_index": null
             }
         ],
         "active_playlist": null
     },
     "refresh_info": {
-        "refresh_time": "2025-12-28T02:26:30.003314+00:00",
-        "image_hash": "f7483c86634fe46f5832fb6373cd826d23955bbea25c8fafc6130937c16b77ce",
+        "refresh_time": "2025-12-28T06:13:55.907443+00:00",
+        "image_hash": "dfbe92e964502c35e78f51c01912f759f3ba4fea1cfb6d0acbec9b45e264264c",
         "refresh_type": "Manual Update",
-        "plugin_id": "clock"
+        "plugin_id": "calendar"
     }
 }

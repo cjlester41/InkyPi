@@ -118,7 +118,7 @@ class RefreshTask:
                         refresh_info.update({"refresh_time": current_dt.isoformat(), "image_hash": image_hash})
                         # check if image is the same as current image
                         screen = 1
-                        if plugin_config['id'] == "clock": 
+                        if plugin_config['id'] in ["calendar", "clock"]: 
                             screen = 2
                             
                         if image_hash != latest_refresh.image_hash:

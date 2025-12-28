@@ -35,7 +35,6 @@ class WaveshareDisplay(AbstractDisplay):
                         not found.
         """
         
-        # Inside initialize_display(self):
         # Create manual CS controllers
         self.cs_pin_1 = gpiozero.LED(8)  # Physical Pin 24
         self.cs_pin_2 = gpiozero.LED(7)  # Physical Pin 26
@@ -66,7 +65,6 @@ class WaveshareDisplay(AbstractDisplay):
     def select_display(self, rst, dc, cs, busy):
                 
         from display.waveshare_epd import epdconfig
-        # epdconfig.RaspberryPi.CS_PIN = -1
         
         # 1. Cleanup existing GPIO pins to avoid "Pin in use" errors
         if hasattr(epdconfig, 'implementation') and epdconfig.implementation is not None:
@@ -77,7 +75,6 @@ class WaveshareDisplay(AbstractDisplay):
                 logger.info(f"Cleanup info: {e}")
 
         # 2. Update the CLASS variables in RaspberryPi before creating the instance
-        # This is necessary because epdconfig.RaspberryPi uses these to init gpiozero
         epdconfig.RaspberryPi.RST_PIN = rst
         epdconfig.RaspberryPi.DC_PIN = dc
         epdconfig.RaspberryPi.CS_PIN = -1 
@@ -98,12 +95,6 @@ class WaveshareDisplay(AbstractDisplay):
             f"RST={epdconfig.RST_PIN}, DC={epdconfig.DC_PIN}, "
             f"CS={epdconfig.CS_PIN}, BUSY={epdconfig.BUSY_PIN}"
         )
-        epdconfig.digital_write(epdconfig.RST_PIN, 1)
-        time.sleep(0.1)
-        epdconfig.digital_write(epdconfig.RST_PIN, 0)
-        time.sleep(0.1)
-        epdconfig.digital_write(epdconfig.RST_PIN, 1)
-        time.sleep(0.1)
 
     def display_image(self, image, screen, image_settings=[]):
         
@@ -132,8 +123,7 @@ class WaveshareDisplay(AbstractDisplay):
         
         # MANUALLY ENABLE THE DISPLAY
         active_cs.off() # Pulls the pin LOW
-        time.sleep(.1)
-        
+        time.sleep(.01)
         
         try:
             self.epd_display.init()
