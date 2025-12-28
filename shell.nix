@@ -24,6 +24,9 @@ pkgs.mkShell {
   ];
 
   shellHook = ''
+    mkdir -p .tmp/bin
+    ln -sf ${pkgs.chromium}/bin/chromium .tmp/bin/chromium-headless-shell
+    export PATH="$PWD/.tmp/bin:$PATH"   
     # Construct the library path cleanly
     export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [ 
       pkgs.libheif pkgs.libde265 pkgs.libtiff pkgs.openjpeg pkgs.freetype pkgs.libgpiod pkgs.openblas pkgs.libffi

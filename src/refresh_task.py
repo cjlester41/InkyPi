@@ -117,20 +117,20 @@ class RefreshTask:
                         refresh_info = refresh_action.get_refresh_info()
                         refresh_info.update({"refresh_time": current_dt.isoformat(), "image_hash": image_hash})
                         # check if image is the same as current image
-                        screen = 1
-                        if plugin_config['id'] in ["calendar", "clock"]: 
-                            screen = 2
-                            
-                        if image_hash != latest_refresh.image_hash:
+                        if plugin_config['id'] in ["weather", "clock"]: 
                             logger.info(f"Updating display. | refresh_info: {refresh_info}")
-                            self.display_manager.display_image(image, screen, image_settings=plugin.config.get("image_settings", []))
+                            self.display_manager.display_image(image, 1, image_settings=plugin.config.get("image_settings", []))
+                            
                         else:
-                            logger.info(f"Image already displayed, skipping refresh. | refresh_info: {refresh_info}")
-
-                        # update latest refresh data in the device config
-                        self.device_config.refresh_info = RefreshInfo(**refresh_info)
-                        self.device_config.write_config()
-
+                            if image_hash != latest_refresh.image_hash:
+                                logger.info(f"Updating display. | refresh_info: {refresh_info}")
+                                self.display_manager.display_image(image, 2, image_settings=plugin.config.get("image_settings", []))
+                                # update latest refresh data in the device config
+                                self.device_config.refresh_info = RefreshInfo(**refresh_info)
+                                self.device_config.write_config()      
+                            else:
+                                logger.info(f"Image already displayed, skipping refresh. | refresh_info: {refresh_info}")
+                               
             except Exception as e:
                 logger.exception('Exception during refresh')
                 self.refresh_result["exception"] = e  # Capture exception

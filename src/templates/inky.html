@@ -12,49 +12,52 @@
                 document.documentElement.setAttribute('data-theme', 'dark');
             }
         })();
-        let lastModified = null;
+        
+        // Track last modified headers for both images independently
+        let lastModified1 = null;
+        let lastModified2 = null;
         const refreshIntervalMs = 3 * 1000;
 
-        async function refreshImage() {
-            const img = document.querySelector('.image-container img');
-            if (!img) return;
+        async function fetchImageData(url, currentLastModified, selector) {
+            const img = document.querySelector(selector);
+            if (!img) return currentLastModified;
 
             try {
                 const headers = {};
-                if (lastModified) {
-                    headers['If-Modified-Since'] = lastModified;
+                if (currentLastModified) {
+                    headers['If-Modified-Since'] = currentLastModified;
                 }
 
-                const response = await fetch('{{ url_for("main.get_current_image") }}', { headers });
+                const response = await fetch(url, { headers });
                 
                 if (response.status === 304) {
-                    // Image hasn't changed, no need to update
-                    return;
+                    return currentLastModified;
                 }
 
                 if (!response.ok) {
                     console.error('Failed to fetch image:', response.status);
-                    return;
+                    return currentLastModified;
                 }
 
                 const blob = await response.blob();
                 const objectUrl = URL.createObjectURL(blob);
                 
-                // Update the image source
                 img.src = objectUrl;
-                
-                // Store the Last-Modified header for next request
-                lastModified = response.headers.get('Last-Modified');
+                return response.headers.get('Last-Modified');
             } catch (error) {
                 console.error('Error refreshing image:', error);
+                return currentLastModified;
             }
         }
 
+        async function refreshImage() {
+            // TARGET BY ID: This ensures we update the correct image regardless of class
+            lastModified1 = await fetchImageData('{{ url_for("main.get_current_image") }}', lastModified1, '#inky-display-1');
+            lastModified2 = await fetchImageData('{{ url_for("main.get_current_image_2") }}', lastModified2, '#inky-display-2');
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Refresh image immediately on page load
             refreshImage();
-            
-            // Set up auto-refresh based on plugin cycle interval
             setInterval(refreshImage, refreshIntervalMs);
         });
     </script>
@@ -63,9 +66,7 @@
 <script src="{{ url_for('static', filename='scripts/image_modal.js') }}"></script>
 <body>
     <script src="{{ url_for('static', filename='scripts/dark_mode.js') }}"></script>
-    <!-- Subtle frame container -->
     <div class="frame">
-        <!-- Page Title -->
         <header class="header">
             <h1>{{ config.name }}</h1>
             <button class="settings-button dark-mode-toggle" title="Toggle Dark Mode" aria-label="Toggle Dark Mode"></button>
@@ -77,19 +78,16 @@
             </a>
         </header>
 
-        <!-- Display the current image -->
         <div class="image-container">
-            <img src="{{ url_for('static', filename='images/current_image.png') }}" alt="Current Image">
+            <img id="inky-display-1" src="{{ url_for('static', filename='images/current_image.png') }}" alt="Current Image">
         </div>
 
         <div style="height: 20px;"></div>
 
-        <!-- Display the current image -->
         <div class="image-container">
-            <img src="{{ url_for('static', filename='images/current_image2.png') }}" alt="Current Image">
+            <img id="inky-display-2" src="{{ url_for('static', filename='images/current_image2.png') }}" alt="Current Image 2">
         </div>
 
-        <!-- Separator -->
         <div class="separator"></div>
         <h2 class="plugins-title">Plugins</h2>
         <div class="button-grid">

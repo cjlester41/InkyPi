@@ -175,3 +175,4 @@ mock_display_output/
 /src/static/images/current_image*
 
 .direnv
+.tmp

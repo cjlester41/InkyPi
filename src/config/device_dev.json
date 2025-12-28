@@ -12,16 +12,93 @@
                 "name": "Default",
                 "start_time": "00:00",
                 "end_time": "24:00",
-                "plugins": [],
-                "current_plugin_index": null
+                "plugins": [
+                    {
+                        "plugin_id": "weather",
+                        "name": "weather",
+                        "plugin_settings": {
+                            "latitude": "37.06664531679314",
+                            "longitude": "-122.12849199771881",
+                            "weatherProvider": "OpenMeteo",
+                            "units": "imperial",
+                            "titleSelection": "custom",
+                            "customTitle": "Bonny Doon, CA",
+                            "displayRefreshTime": "true",
+                            "displayMetrics": "true",
+                            "displayGraph": "true",
+                            "displayRain": "true",
+                            "displayForecast": "true",
+                            "forecastDays": "7",
+                            "selectedFrame": "None",
+                            "topMargin": "",
+                            "bottomMargin": "",
+                            "leftMargin": "",
+                            "rightMargin": "",
+                            "backgroundOption": "color",
+                            "backgroundColor": "#ffffff",
+                            "textColor": "#000000"
+                        },
+                        "refresh": {
+                            "interval": 300
+                        },
+                        "latest_refresh_time": "2025-12-28T13:27:34.600242-08:00"
+                    },
+                    {
+                        "plugin_id": "calendar",
+                        "name": "calendar",
+                        "plugin_settings": {
+                            "calendarColors[]": [
+                                "#007bff",
+                                "#f6d32d"
+                            ],
+                            "calendarURLs[]": [
+                                "https://www.calendarlabs.com/ical-calendar/ics/76/US_Holidays.ics",
+                                "https://outlook.live.com/owa/calendar/00000000-0000-0000-0000-000000000000/3f5f5de3-0ba8-4db0-af3b-430f2b2828b7/cid-BEE90FDFB4922E48/calendar.ics"
+                            ],
+                            "viewMode": "dayGrid",
+                            "language": "en",
+                            "displayWeekends": "true",
+                            "displayEventTime": "true",
+                            "weekStartDay": "0",
+                            "displayWeeks": "4",
+                            "fontSize": "large",
+                            "selectedFrame": "None",
+                            "topMargin": "",
+                            "bottomMargin": "",
+                            "leftMargin": "",
+                            "rightMargin": "",
+                            "backgroundOption": "color",
+                            "backgroundColor": "#ffffff",
+                            "textColor": "#000000"
+                        },
+                        "refresh": {
+                            "interval": 300
+                        },
+                        "latest_refresh_time": "2025-12-28T13:28:17.210932-08:00"
+                    }
+                ],
+                "current_plugin_index": 0
             }
         ],
-        "active_playlist": null
+        "active_playlist": "Default"
     },
     "refresh_info": {
-        "refresh_time": "2025-12-27T05:18:17.424304+00:00",
-        "image_hash": "7306b153a435c2579dc4c4215ded3976d6984b8d2580303368c59ae96ad4988d",
-        "refresh_type": "Manual Update",
-        "plugin_id": "comic"
+        "refresh_time": "2025-12-28T13:28:17.210932-08:00",
+        "image_hash": "de91ee8c56d338ff98bc9c2e30ac7a219e719a036f839bd8130d3c3e48a98531",
+        "refresh_type": "Playlist",
+        "plugin_id": "calendar",
+        "playlist": "Default",
+        "plugin_instance": "calendar"
+    },
+    "inverted_image": null,
+    "log_system_stats": null,
+    "timezone": "PST8PDT",
+    "time_format": "12h",
+    "plugin_cycle_interval_seconds": 120,
+    "image_settings": {
+        "saturation": 1.0,
+        "brightness": 1.0,
+        "sharpness": 1.0,
+        "contrast": 1.0
     }
 }
