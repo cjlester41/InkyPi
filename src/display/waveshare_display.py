@@ -1,4 +1,4 @@
-import inspect
+import time
 import importlib
 import logging
 import sys
@@ -63,7 +63,7 @@ class WaveshareDisplay(AbstractDisplay):
                 # This calls module_exit(cleanup=True) which closes gpiozero objects
                 epdconfig.implementation.module_exit(cleanup=True)
             except Exception as e:
-                logger.debug(f"Cleanup info: {e}")
+                logger.info(f"Cleanup info: {e}")
 
         # 2. Update the CLASS variables in RaspberryPi before creating the instance
         # This is necessary because epdconfig.RaspberryPi uses these to init gpiozero
@@ -81,6 +81,18 @@ class WaveshareDisplay(AbstractDisplay):
 
         # 5. Refresh the EPD object so it picks up the new pin values from epdconfig
         self.epd_display = self.epd_module.EPD()                  
+        logger.info(
+            f"Display re-instantiated with Pins: "
+            f"MOSI={epdconfig.MOSI_PIN}, SCLK={epdconfig.SCLK_PIN}, "
+            f"RST={epdconfig.RST_PIN}, DC={epdconfig.DC_PIN}, "
+            f"CS={epdconfig.CS_PIN}, BUSY={epdconfig.BUSY_PIN}"
+        )
+        epdconfig.digital_write(epdconfig.RST_PIN, 1)
+        time.sleep(0.1)
+        epdconfig.digital_write(epdconfig.RST_PIN, 0)
+        time.sleep(0.1)
+        epdconfig.digital_write(epdconfig.RST_PIN, 1)
+        time.sleep(0.1)
 
     def display_image(self, image, screen, image_settings=[]):
         
@@ -105,7 +117,7 @@ class WaveshareDisplay(AbstractDisplay):
             self.select_display(rst=27, dc=22, cs=7, busy=23)
         
         logger.info(f"Displaying image to Waveshare screen {screen}")
-        
+        time.sleep(.1) 
         # Initialize the hardware for this specific pin set
         self.epd_display.init()
         
