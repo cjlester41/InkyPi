@@ -1,4 +1,5 @@
 import time
+import gpiozero
 import importlib
 import logging
 import sys
@@ -34,6 +35,15 @@ class WaveshareDisplay(AbstractDisplay):
                         not found.
         """
         
+        # Inside initialize_display(self):
+        # Create manual CS controllers
+        self.cs_pin_1 = gpiozero.LED(8)  # Physical Pin 24
+        self.cs_pin_2 = gpiozero.LED(7)  # Physical Pin 26
+        
+        # Ensure both are HIGH (disabled) initially
+        self.cs_pin_1.on()
+        self.cs_pin_2.on()
+        
         logger.info("Initializing Waveshare display")
 
         # get the device type which should be the model number of the device.
@@ -56,6 +66,7 @@ class WaveshareDisplay(AbstractDisplay):
     def select_display(self, rst, dc, cs, busy):
                 
         from display.waveshare_epd import epdconfig
+        # epdconfig.RaspberryPi.CS_PIN = -1
         
         # 1. Cleanup existing GPIO pins to avoid "Pin in use" errors
         if hasattr(epdconfig, 'implementation') and epdconfig.implementation is not None:
@@ -69,7 +80,7 @@ class WaveshareDisplay(AbstractDisplay):
         # This is necessary because epdconfig.RaspberryPi uses these to init gpiozero
         epdconfig.RaspberryPi.RST_PIN = rst
         epdconfig.RaspberryPi.DC_PIN = dc
-        epdconfig.RaspberryPi.CS_PIN = cs
+        epdconfig.RaspberryPi.CS_PIN = -1 
         epdconfig.RaspberryPi.BUSY_PIN = busy
         
         # 3. Re-instantiate the hardware implementation with the new pin mapping
@@ -109,21 +120,26 @@ class WaveshareDisplay(AbstractDisplay):
         Raises:
             ValueError: If no image is provided.
         """
+
         if screen == 1:
-            # Standard Pins
             self.select_display(rst=17, dc=25, cs=8, busy=24)
+            active_cs = self.cs_pin_1
         else:
-            # Alternate Pins (Make sure these match your physical wiring!)
             self.select_display(rst=27, dc=22, cs=7, busy=23)
+            active_cs = self.cs_pin_2
         
-        logger.info(f"Displaying image to Waveshare screen {screen}")
-        time.sleep(.1) 
-        # Initialize the hardware for this specific pin set
-        self.epd_display.init()
+        logger.info(f"Activating CS for screen {screen}")
         
-        # Standard display logic
-        self.epd_display.Clear()
-        self.epd_display.display(self.epd_display.getbuffer(image))
+        # MANUALLY ENABLE THE DISPLAY
+        active_cs.off() # Pulls the pin LOW
+        time.sleep(.1)
         
-        # Sleep to protect the panel and release the pins via module_exit in next call
-        self.epd_display.sleep()
+        
+        try:
+            self.epd_display.init()
+            self.epd_display.Clear()
+            self.epd_display.display(self.epd_display.getbuffer(image))
+            self.epd_display.sleep()
+        finally:
+            # MANUALLY DISABLE THE DISPLAY
+            active_cs.on() # Pulls the pin HIGH       

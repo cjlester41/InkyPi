@@ -33,6 +33,7 @@ from jinja2 import ChoiceLoader, FileSystemLoader
 from plugins.plugin_registry import load_plugins
 from waitress import serve
 
+os.environ['GPIOZERO_PIN_FACTORY'] = 'mock'
 
 logger = logging.getLogger(__name__)
 
