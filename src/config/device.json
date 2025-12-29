@@ -1,7 +1,7 @@
 {
     "name": "InkyPi",
     "orientation": "horizontal",
-    "inverted_image": false,
+    "inverted_image": null,
     "scheduler_sleep_time": 60,
     "startup": false,
     "display_type": "epd7in3e",
@@ -13,45 +13,94 @@
         "playlists": [
             {
                 "name": "Default",
-                "start_time": "00:00",
-                "end_time": "24:00",
+                "start_time": "05:30",
+                "end_time": "21:00",
                 "plugins": [
                     {
-                        "plugin_id": "comic",
-                        "name": "test",
+                        "plugin_id": "weather",
+                        "name": "weather",
                         "plugin_settings": {
-                            "comic": "XKCD",
-                            "titleCaption": "true",
-                            "fontSize": "14"
+                            "latitude": "37.06664531679314",
+                            "longitude": "-122.12849199771881",
+                            "weatherProvider": "OpenMeteo",
+                            "units": "imperial",
+                            "titleSelection": "custom",
+                            "customTitle": "Bonny Doon, CA",
+                            "displayRefreshTime": "true",
+                            "displayMetrics": "true",
+                            "displayGraph": "true",
+                            "displayRain": "true",
+                            "displayForecast": "true",
+                            "forecastDays": "7",
+                            "selectedFrame": "None",
+                            "topMargin": "",
+                            "bottomMargin": "",
+                            "leftMargin": "",
+                            "rightMargin": "",
+                            "backgroundOption": "color",
+                            "backgroundColor": "#ffffff",
+                            "textColor": "#000000"
                         },
                         "refresh": {
-                            "interval": 60
+                            "interval": 3480
                         },
-                        "latest_refresh_time": "2025-12-28T06:06:54.988576+00:00"
+                        "latest_refresh_time": "2025-12-28T13:27:34.600242-08:00"
                     },
                     {
-                        "plugin_id": "clock",
-                        "name": "clock",
+                        "plugin_id": "calendar",
+                        "name": "calendar",
                         "plugin_settings": {
-                            "selectedClockFace": "Digital Clock",
-                            "primaryColor": "#ffffff",
-                            "secondaryColor": "#000000"
+                            "calendarColors[]": [
+                                "#0000ff",
+                                "#ffff00"
+                            ],
+                            "calendarURLs[]": [
+                                "https://www.calendarlabs.com/ical-calendar/ics/76/US_Holidays.ics",
+                                "https://outlook.live.com/owa/calendar/00000000-0000-0000-0000-000000000000/3f5f5de3-0ba8-4db0-af3b-430f2b2828b7/cid-BEE90FDFB4922E48/calendar.ics"
+                            ],
+                            "viewMode": "dayGrid",
+                            "language": "en",
+                            "displayWeekends": "true",
+                            "displayEventTime": "true",
+                            "weekStartDay": "0",
+                            "displayWeeks": "4",
+                            "fontSize": "normal",
+                            "selectedFrame": "None",
+                            "topMargin": "",
+                            "bottomMargin": "",
+                            "leftMargin": "",
+                            "rightMargin": "",
+                            "backgroundOption": "color",
+                            "backgroundColor": "#ffffff",
+                            "textColor": "#000000"
                         },
                         "refresh": {
-                            "interval": 60
+                            "interval": 3480 
                         },
-                        "latest_refresh_time": "2025-12-28T06:06:10.906640+00:00"
+                        "latest_refresh_time": "2025-12-28T18:26:06.031770-08:00"
                     }
                 ],
-                "current_plugin_index": null
+                "current_plugin_index": 1
             }
         ],
-        "active_playlist": null
+        "active_playlist": "Default"
     },
     "refresh_info": {
-        "refresh_time": "2025-12-28T06:13:55.907443+00:00",
-        "image_hash": "dfbe92e964502c35e78f51c01912f759f3ba4fea1cfb6d0acbec9b45e264264c",
-        "refresh_type": "Manual Update",
-        "plugin_id": "calendar"
+        "refresh_time": "2025-12-28T18:26:06.031770-08:00",
+        "image_hash": "57d85227946f7304692ca37f93ed0d73436a511bd3d524a8c7048836d752e8b5",
+        "refresh_type": "Playlist",
+        "plugin_id": "calendar",
+        "playlist": "Default",
+        "plugin_instance": "calendar"
+    },
+    "log_system_stats": null,
+    "timezone": "PST8PDT",
+    "time_format": "12h",
+    "plugin_cycle_interval_seconds": 300,
+    "image_settings": {
+        "saturation": 1.0,
+        "brightness": 1.0,
+        "sharpness": 1.0,
+        "contrast": 1.0
     }
 }

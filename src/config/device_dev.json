@@ -10,8 +10,8 @@
         "playlists": [
             {
                 "name": "Default",
-                "start_time": "00:00",
-                "end_time": "24:00",
+                "start_time": "05:30",
+                "end_time": "21:30",
                 "plugins": [
                     {
                         "plugin_id": "weather",
@@ -39,7 +39,7 @@
                             "textColor": "#000000"
                         },
                         "refresh": {
-                            "interval": 300
+                            "interval": 3480
                         },
                         "latest_refresh_time": "2025-12-28T13:27:34.600242-08:00"
                     },
@@ -48,8 +48,8 @@
                         "name": "calendar",
                         "plugin_settings": {
                             "calendarColors[]": [
-                                "#007bff",
-                                "#f6d32d"
+                                "#0000ff",
+                                "#ffff00"
                             ],
                             "calendarURLs[]": [
                                 "https://www.calendarlabs.com/ical-calendar/ics/76/US_Holidays.ics",
@@ -61,7 +61,7 @@
                             "displayEventTime": "true",
                             "weekStartDay": "0",
                             "displayWeeks": "4",
-                            "fontSize": "large",
+                            "fontSize": "normal",
                             "selectedFrame": "None",
                             "topMargin": "",
                             "bottomMargin": "",
@@ -72,29 +72,28 @@
                             "textColor": "#000000"
                         },
                         "refresh": {
-                            "interval": 300
+                            "interval": 3480 
                         },
-                        "latest_refresh_time": "2025-12-28T13:28:17.210932-08:00"
+                        "latest_refresh_time": "2025-12-28T18:26:06.031770-08:00"
                     }
                 ],
-                "current_plugin_index": 0
+                "current_plugin_index": 1
             }
         ],
         "active_playlist": "Default"
     },
     "refresh_info": {
-        "refresh_time": "2025-12-28T13:28:17.210932-08:00",
-        "image_hash": "de91ee8c56d338ff98bc9c2e30ac7a219e719a036f839bd8130d3c3e48a98531",
+        "refresh_time": "2025-12-28T18:26:06.031770-08:00",
+        "image_hash": "57d85227946f7304692ca37f93ed0d73436a511bd3d524a8c7048836d752e8b5",
         "refresh_type": "Playlist",
         "plugin_id": "calendar",
         "playlist": "Default",
         "plugin_instance": "calendar"
     },
-    "inverted_image": null,
     "log_system_stats": null,
     "timezone": "PST8PDT",
     "time_format": "12h",
-    "plugin_cycle_interval_seconds": 120,
+    "plugin_cycle_interval_seconds": 300,
     "image_settings": {
         "saturation": 1.0,
         "brightness": 1.0,
