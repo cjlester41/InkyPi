@@ -1,7 +1,7 @@
 {
     "name": "InkyPi",
     "orientation": "horizontal",
-    "inverted_image": null,
+    "inverted_image": "on",
     "scheduler_sleep_time": 60,
     "startup": false,
     "display_type": "epd7in3e",
@@ -14,7 +14,7 @@
             {
                 "name": "Default",
                 "start_time": "05:30",
-                "end_time": "21:00",
+                "end_time": "21:30",
                 "plugins": [
                     {
                         "plugin_id": "weather",
@@ -42,21 +42,23 @@
                             "textColor": "#000000"
                         },
                         "refresh": {
-                            "interval": 3480
+                            "interval": 3400
                         },
-                        "latest_refresh_time": "2025-12-28T13:27:34.600242-08:00"
+                        "latest_refresh_time": "2025-12-29T20:11:11.359277-08:00"
                     },
                     {
                         "plugin_id": "calendar",
                         "name": "calendar",
                         "plugin_settings": {
                             "calendarColors[]": [
-                                "#0000ff",
-                                "#ffff00"
+                                "#7f007f",
+                                "#7fff00",
+                                "#ff7f00"
                             ],
                             "calendarURLs[]": [
                                 "https://www.calendarlabs.com/ical-calendar/ics/76/US_Holidays.ics",
-                                "https://outlook.live.com/owa/calendar/00000000-0000-0000-0000-000000000000/3f5f5de3-0ba8-4db0-af3b-430f2b2828b7/cid-BEE90FDFB4922E48/calendar.ics"
+                                "https://outlook.live.com/owa/calendar/00000000-0000-0000-0000-000000000000/3f5f5de3-0ba8-4db0-af3b-430f2b2828b7/cid-BEE90FDFB4922E48/calendar.ics",
+                                "https://outlook.live.com/owa/calendar/00000000-0000-0000-0000-000000000000/ac2765a7-2891-4033-8387-bd8f31b642fb/cid-BEE90FDFB4922E48/calendar.ics"
                             ],
                             "viewMode": "dayGrid",
                             "language": "en",
@@ -64,7 +66,7 @@
                             "displayEventTime": "true",
                             "weekStartDay": "0",
                             "displayWeeks": "4",
-                            "fontSize": "normal",
+                            "fontSize": "large",
                             "selectedFrame": "None",
                             "topMargin": "",
                             "bottomMargin": "",
@@ -75,19 +77,19 @@
                             "textColor": "#000000"
                         },
                         "refresh": {
-                            "interval": 3480 
+                            "interval": 3400
                         },
-                        "latest_refresh_time": "2025-12-28T18:26:06.031770-08:00"
+                        "latest_refresh_time": "2025-12-29T20:17:42.419245-08:00"
                     }
                 ],
-                "current_plugin_index": 1
+                "current_plugin_index": 0
             }
         ],
         "active_playlist": "Default"
     },
     "refresh_info": {
-        "refresh_time": "2025-12-28T18:26:06.031770-08:00",
-        "image_hash": "57d85227946f7304692ca37f93ed0d73436a511bd3d524a8c7048836d752e8b5",
+        "refresh_time": "2025-12-29T20:17:42.419245-08:00",
+        "image_hash": "999d2827e946fae729e0600f2442a37e2115bc7a43605008fca2d37484284108",
         "refresh_type": "Playlist",
         "plugin_id": "calendar",
         "playlist": "Default",
@@ -96,7 +98,7 @@
     "log_system_stats": null,
     "timezone": "PST8PDT",
     "time_format": "12h",
-    "plugin_cycle_interval_seconds": 300,
+    "plugin_cycle_interval_seconds": 1740,
     "image_settings": {
         "saturation": 1.0,
         "brightness": 1.0,
